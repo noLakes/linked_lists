@@ -1,3 +1,4 @@
+require 'pry'
 
 class Node
   attr_accessor :val, :next_node
@@ -13,33 +14,64 @@ class Node
 end
 
 class LinkedList
-  attr_accessor :head
-  def initialize(val=1)
-    @head = Node.new(val, nil)
+  attr_accessor :list, :read
+  def initialize(val=nil)
+    @list = Node.new(val, nil)
+    @read = @list
+    @count = 0
+  end
+
+  def read_next
+    @read = @read.next_node
+  end
+
+  def reset_read
+    @read = @list
   end
 
   def append(val)
-    if head.tail?
-      head.next_node = Node.new(val)
+    if read.tail?
+      read.next_node = Node.new(val)
+      reset_read
     else
-      head.next_node.append(val)
+      @read = @read.next_node
+      append(val)
     end
   end
 
   def prepend(val)
-    new_head = Node.new(val, @head)
-    @head = new_head
+    new_head = Node.new(val, @list)
+    @list = new_head
+    reset_read
+  end
+
+  def size
+    
+  end
+
+  def to_s
+    string = []
+    loop do
+      string << "{ #{read.val} }  =>"
+      break if read.tail?
+      @read = read.next_node
+    end
+    reset_read
+    string << 'nil'
+    string.join(' ')
   end
 
 end
 
 x = LinkedList.new('greg')
 
-p x
-
 x.prepend('jeff')
+x.append('james')
+x.append('john')
+x.prepend('bob')
 
-p x
+
+puts x.to_s
 
 
 
