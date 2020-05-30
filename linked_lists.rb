@@ -25,13 +25,19 @@ class LinkedList
       head.next_node.append(val)
     end
   end
+
+  def prepend(val)
+    new_head = Node.new(val, @head)
+    @head = new_head
+  end
+
 end
 
 x = LinkedList.new('greg')
 
 p x
 
-x.append('jeff')
+x.prepend('jeff')
 
 p x
 
