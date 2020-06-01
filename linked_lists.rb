@@ -35,7 +35,7 @@ class LinkedList
   end
 
   def head 
-    "{ #{list.val} }"
+    list
   end
 
   def tail
@@ -43,9 +43,10 @@ class LinkedList
       read_next
     end
     reset_read
-    "{ #{tmp.val} }"
+    tmp
   end
 
+  #allow app/prepend to add multiple elements
   def append(val)
     if read.tail?
       read.next_node = Node.new(val)
@@ -90,11 +91,12 @@ class LinkedList
       read_next
     end
     reset_read
-    "{ #{tmp.val} }"
+    tmp
   end
 
   def pop
-    
+    puts self.tail.val
+    self.at(self.size - 2).next_node = nil
   end
 
 end
@@ -106,6 +108,7 @@ x.append('james')
 x.append('john')
 x.prepend('bob')
 
-
 puts x.to_s
-puts x.size
+x.pop
+puts x.to_s
+
