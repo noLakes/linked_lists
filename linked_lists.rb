@@ -1,4 +1,3 @@
-require 'pry'
 
 class Node
   attr_accessor :val, :next_node
@@ -16,6 +15,7 @@ end
 
 class LinkedList
   attr_accessor :list, :read, :tmp
+  
   def initialize(val=nil)
     @list = Node.new(val, nil)
     @read = @list
@@ -46,7 +46,6 @@ class LinkedList
     tmp
   end
 
-  #allow app/prepend to add multiple elements
   def append(val)
     if read.tail?
       read.next_node = Node.new(val)
@@ -77,7 +76,7 @@ class LinkedList
     string = []
     loop do
       string << "{ #{read.val} }  =>"
-      break if read.tail?
+      break if @read.tail?
       read_next
     end
     reset_read
@@ -97,18 +96,71 @@ class LinkedList
   def pop
     puts self.tail.val
     self.at(self.size - 2).next_node = nil
+    reset_read
   end
 
+  def shift
+    puts self.head.val
+    @list = self.head.next_node
+    reset_read 
+  end
+
+  def contains?(val)
+    if @read.val == val
+      reset_read
+      true
+    elsif @read.tail?
+      reset_read
+      false
+    else 
+      read_next
+      contains?(val)
+    end
+  end
+
+  def find(val)
+    if @read.val == val
+      result = @pos
+      reset_read
+      result
+    elsif @read.tail?
+      reset_read
+      false
+    else 
+      read_next
+      find(val)
+    end
+  end
+
+  #no negative wrapping
+  def insert_at(val, idx)
+    if idx > self.size
+      puts "Error: #{idx} exceeds list size"
+    elsif idx == self.size
+      append(val)
+    elsif idx <= 0
+      prepend(val)
+    else
+      parent = self.at(idx - 1)
+      child = self.at(idx)
+      parent.next_node = Node.new(val, child)
+      reset_read
+    end
+  end
+  
+  #no negative wrapping
+  def remove_at(idx)
+    if idx > self.size
+      puts "Error: #{idx} exceeds list size"
+    elsif (idx + 1) == self.size
+      self.pop
+    elsif idx <= 0
+      self.shift
+    else
+      idx == 1 ? parent = @list : parent = self.at(idx -1)
+      new_child = self.at(idx +1)
+      parent.next_node = new_child
+      reset_read
+    end
+  end
 end
-
-x = LinkedList.new('greg')
-
-x.prepend('jeff')
-x.append('james')
-x.append('john')
-x.prepend('bob')
-
-puts x.to_s
-x.pop
-puts x.to_s
-
